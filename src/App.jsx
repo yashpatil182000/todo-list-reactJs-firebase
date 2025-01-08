@@ -19,7 +19,7 @@ function App() {
   useEffect(async () => {
     const querySnapshot = await getDocs(collection(db, "todos"));
     querySnapshot.docs.forEach((doc) => {
-      console.log(doc.data());
+      console.log("todoArray: ", doc.data());
       setTodos(doc.data());
     });
   }, []);
