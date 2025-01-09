@@ -16,13 +16,13 @@ function App() {
   // }, []);
   // console.log(todos);
 
-  useEffect(async () => {
-    const querySnapshot = await getDocs(collection(db, "todos"));
-    querySnapshot.docs.forEach((doc) => {
-      console.log("todoArray: ", doc.data());
-      setTodos(doc.data());
-    });
-  }, []);
+  // useEffect(async () => {
+  //   const querySnapshot = await getDocs(collection(db, "todos"));
+
+  //   querySnapshot.docs.map((doc) => {
+  //     console.log(doc.data());
+  //   });
+  // }, []);
 
   return (
     <div className="p-10">
@@ -41,6 +41,10 @@ function App() {
           <p className="font-bold text-xl mb-2">Title</p>
           <p className="font-light ">Description</p>
         </div>
+
+        {todos.map((todo) => {
+          console.log(todo.title);
+        })}
       </div>
     </div>
   );
