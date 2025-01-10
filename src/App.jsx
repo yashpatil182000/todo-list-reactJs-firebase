@@ -24,24 +24,17 @@ function App() {
   //   });
   // }, []);
 
-
-
-
-
-
-  const fetchToDos = async()=>{
-  const querySnapshot = await getDocs(collection(db, "todos"));
+  const fetchToDos = async () => {
+    const querySnapshot = await getDocs(collection(db, "todos"));
     const todoList = querySnapshot.docs.map((doc) => {
-       doc.data();
-       });
-           setTodos(todoList);
-  }
+      return doc.data();
+    });
+    setTodos(todoList);
+  };
 
-
-  useEffect(()=>{
+  useEffect(() => {
     fetchToDos();
-
-  },[])
+  }, []);
 
   return (
     <div className="p-10">
@@ -61,9 +54,18 @@ function App() {
           <p className="font-light ">Description</p>
         </div>
 
-       
-        <p>{JSON.stringify(todos) }</p>
+        {/* <p>{JSON.stringify(todos)}</p> */}
 
+        {todos &&
+          todos.map((todo, index) => {
+            return (
+              <TodoDialog
+                key={index}
+                title={todo.title}
+                description={todo.description}
+              />
+            );
+          })}
       </div>
     </div>
   );

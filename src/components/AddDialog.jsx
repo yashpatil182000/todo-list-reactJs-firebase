@@ -32,8 +32,9 @@ export default function AddDialog() {
         status: false,
       });
       console.log("added successfully");
-      setTitle(" ");
-      setDescription(" ");
+      setTitle("");
+      setDescription("");
+      setOpen(false);
     } else {
       alert("Input fields cannot be empty!");
     }
