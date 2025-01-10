@@ -24,6 +24,25 @@ function App() {
   //   });
   // }, []);
 
+
+
+
+
+
+  const fetchToDos = async()=>{
+  const querySnapshot = await getDocs(collection(db, "todos"));
+    const todoList = querySnapshot.docs.map((doc) => {
+       doc.data();
+       });
+           setTodos(todoList);
+  }
+
+
+  useEffect(()=>{
+    fetchToDos();
+
+  },[])
+
   return (
     <div className="p-10">
       <div>
@@ -42,9 +61,9 @@ function App() {
           <p className="font-light ">Description</p>
         </div>
 
-        {todos.map((todo) => {
-          console.log(todo.title);
-        })}
+       
+        <p>{JSON.stringify(todos) }</p>
+
       </div>
     </div>
   );
