@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import AddDialog from "./components/AddDialog.jsx";
 import TodoDialog from "./components/TodoDialog.jsx";
-import { collection, doc, getDocs, query } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
 import { db } from "./firebase.js";
 
 function App() {
@@ -43,10 +50,16 @@ function App() {
     });
   };
 
-  const deleteTodo = (id) => {
-    setTodos((prev) => {
-      return prev.filter((todo) => todo.id !== id);
-    });
+  // const deleteTodo = (id) => {
+  //   setTodos((prev) => {
+  //     return prev.filter((todo) => todo.id !== id);
+  //   });
+  // };
+
+  const deleteTodo = async (id) => {
+    await deleteDoc(doc(db, "todos", id))
+      .then(fetchToDos())
+      .then(console.log(id, "deleted"));
   };
 
   useEffect(() => {
