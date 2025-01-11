@@ -32,6 +32,23 @@ function App() {
     setTodos(todoList);
   };
 
+  const toggleIcon = (id) => {
+    setTodos((prev) => {
+      return prev.map((todo) => {
+        if (todo.id == id) {
+          return { ...todo, status: !todo.status };
+        }
+        return todo;
+      });
+    });
+  };
+
+  const deleteTodo = (id) => {
+    setTodos((prev) => {
+      return prev.filter((todo) => todo.id !== id);
+    });
+  };
+
   useEffect(() => {
     fetchToDos();
   }, []);
@@ -63,6 +80,10 @@ function App() {
                 key={index}
                 title={todo.title}
                 description={todo.description}
+                id={todo.id}
+                isActive={todo.status}
+                deleteTodo={deleteTodo}
+                toggleIcon={toggleIcon}
               />
             );
           })}
