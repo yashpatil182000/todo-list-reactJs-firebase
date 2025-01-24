@@ -39,7 +39,10 @@ function TodoDialog({
         <p className="font-light ">{description}</p>
         <div className="flex gap-3 mt-10 justify-center">
           <img
-            onClick={() => toggleIcon(id)}
+            onClick={() => {
+              toggleIcon(id);
+              setOpen(false);
+            }}
             src={isActive ? CheckedIcon : UncheckedIcon}
             className="w-7 hover:scale-110 duration-200"
             alt=""
@@ -47,6 +50,7 @@ function TodoDialog({
           <img
             onClick={() => {
               deleteTodo(id);
+              setOpen(false);
             }}
             src={DeleteIcon}
             className="w-7 hover:scale-110 duration-200"

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import PlusIcon from "../assets/plus.png";
 import { db } from "../firebase";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, updateDoc, doc } from "firebase/firestore";
 import {
   Button,
   Dialog,
@@ -21,20 +21,25 @@ export default function AddDialog() {
   const [description, setDescription] = useState("");
 
   const handleAdd = async () => {
-    let id = crypto.randomUUID();
+    // let id = crypto.randomUUID();
     if (title && description) {
       console.log("adding to firebase");
 
-      await addDoc(collection(db, "todos"), {
-        id: id,
-        title: title,
-        description: description,
-        status: false,
-      });
-      console.log("added successfully");
-      setTitle("");
-      setDescription("");
-      setOpen(false);
+      try {
+        const docRef = await addDoc(collection(db, "todos"), {
+          title: title,
+          description: description,
+          status: false,
+        });
+        await updateDoc(doc(db, "todos", docRef.id), { id: docRef.id });
+
+        console.log("added successfully");
+        setTitle("");
+        setDescription("");
+        setOpen(false);
+      } catch (error) {
+        console.log("failed to add todo:: Error::", error);
+      }
     } else {
       alert("Input fields cannot be empty!");
     }

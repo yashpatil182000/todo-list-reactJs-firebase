@@ -4,8 +4,8 @@ import TodoDialog from "./components/TodoDialog.jsx";
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
-  query,
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
@@ -13,23 +13,6 @@ import { db } from "./firebase.js";
 
 function App() {
   const [todos, setTodos] = useState([]);
-
-  // useEffect(async () => {
-  //   const querySnapshot = await getDocs(collection(db, "todos"));
-  //   const todoList = querySnapshot.docs.map((doc) => {
-  //     doc.data();
-  //   });
-  //   setTodos(todoList);
-  // }, []);
-  // console.log(todos);
-
-  // useEffect(async () => {
-  //   const querySnapshot = await getDocs(collection(db, "todos"));
-
-  //   querySnapshot.docs.map((doc) => {
-  //     console.log(doc.data());
-  //   });
-  // }, []);
 
   const fetchToDos = async () => {
     const querySnapshot = await getDocs(collection(db, "todos"));
@@ -39,32 +22,33 @@ function App() {
     setTodos(todoList);
   };
 
-  const toggleIcon = (id) => {
-    setTodos((prev) => {
-      return prev.map((todo) => {
-        if (todo.id == id) {
-          return { ...todo, status: !todo.status };
-        }
-        return todo;
-      });
-    });
+  const toggleIcon = async (id) => {
+    try {
+      const todoRef = doc(db, "todos", id);
+      const todoSnap = await getDoc(todoRef);
+
+      if (todoSnap.exists()) {
+        const currentStatus = todoSnap.data().status;
+        await updateDoc(todoRef, { status: !currentStatus });
+      } else {
+        console.log("No such document!");
+      }
+    } catch (error) {
+      console.log("TOGGLE ICON FUNCTION :: ERROR :: ", error);
+    }
   };
 
-  // const deleteTodo = (id) => {
-  //   setTodos((prev) => {
-  //     return prev.filter((todo) => todo.id !== id);
-  //   });
-  // };
-
   const deleteTodo = async (id) => {
-    await deleteDoc(doc(db, "todos", id))
-      .then(fetchToDos())
-      .then(console.log(id, "deleted"));
+    try {
+      await deleteDoc(doc(db, "todos", id)).then(console.log(id, "deleted"));
+    } catch (error) {
+      console.log("DELETE TODO FUNCTION :: ERROR :: ", error);
+    }
   };
 
   useEffect(() => {
     fetchToDos();
-  }, []);
+  }, [deleteTodo, toggleIcon]);
 
   return (
     <div className="p-10">
